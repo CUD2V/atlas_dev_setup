@@ -1,10 +1,5 @@
 ---
 
-- name: create sql dir
-  file:
-    dest: "{{ data_download_dir }}/ohdsi/sql"
-    state: directory
-
 - name: create link_data.sql on remote
   template: src={{item.src}} dest={{item.dest}}
   with_items:
@@ -17,40 +12,12 @@
     patterns: "*.csv"
   register: data
 
-- name: "find all vocabulary files in {{ data_download_dir }}/vocabulary"
-  find:
-    paths: "{{ data_download_dir }}/vocabulary"
-    patterns: "*.csv"
-  register: vocabulary
-
 - name: build sql COPY commands based on files in data and vocab dirs
   template:
     src: "{{ role_path }}/files/load.j2"
     dest: "{{ data_download_dir }}/ohdsi/sql/load_{{ item.name }}.sql"
   with_items:
   - { name: data, files: "{{ data.files }}", directory: "{{ data_download_dir }}/{{ data_dataset }}", arguments: DELIMITER E'\t' CSV ENCODING 'UTF8'}
-  - { name: vocabulary, files: "{{ vocabulary.files }}", directory: "{{ data_download_dir }}/vocabulary", arguments: DELIMITER E'\t' CSV HEADER QUOTE E'\b'}
-
-- name: clone cdm repo
-  git:
-    repo: https://github.com/OHDSI/CommonDataModel.git
-    dest: "{{ data_download_dir }}/ohdsi/common_data_model"
-    version: v5.2.2
-
-- name: find files sql files in cdm repo
-  find:
-    paths: "{{ data_download_dir }}/ohdsi/common_data_model/PostgreSQL/"
-    patterns: "*.sql"
-    recurse: yes
-  register: files_matched_subdirectory
-
-- name: copy cdm sql to common sql dir
-  copy:
-    src: "{{ item.path }}"
-    dest: "{{ data_download_dir }}/ohdsi/sql/"
-    remote_src: yes
-  with_items:
-  - "{{ files_matched_subdirectory.files }}"
 
 - name: create {{ data_dataset }} schema
   postgresql_schema:
@@ -72,10 +39,8 @@
   with_items:
   - OMOP CDM ddl - PostgreSQL.sql
   - load_data.sql
-  - load_vocabulary.sql
   - OMOP CDM constraints - PostgreSQL.sql
   - OMOP CDM indexes required - PostgreSQL.sql
-  - link_data.sql
   register: result
   environment:
     PGOPTIONS: --search_path={{ data_dataset }}
@@ -84,5 +49,58 @@
   copy:
     content: "{{ result }}"
     dest: "{{data_download_dir}}/ohdsi/sql/{{ data_dataset }}_load_run.log"
+    force: no
+
+- name: create {{ data_dataset }}_results schema
+  postgresql_schema:
+    name: "{{ data_dataset }}_results"
+    database: ohdsi
+  become: true
+  become_user: postgres
+
+- name: create results schema
+  shell: psql ohdsi -f "{{ item }}"
+  become: true
+  become_user: postgres
+  args:
+    chdir: "{{data_download_dir}}/ohdsi/sql"
+    creates: results_run.log
+  with_items:
+  - OMOP CDM ddl - PostgreSQL.sql
+  #Not required until CDM v6.0
+#  - OMOP CDM Results postgresql ddl.txt
+  - OMOP CDM constraints - PostgreSQL.sql
+  - OMOP CDM indexes required - PostgreSQL.sql
+  register: results
+  environment:
+    PGOPTIONS: --search_path={{ data_dataset }}_results
+
+- name: "create results_run.txt"
+  copy:
+    content: "{{ results }}"
+    dest: "{{data_download_dir}}/ohdsi/sql/results_run.log"
+    force: no
+
+- name: alter default table permissions
+  include_role:
+    name: cdm
+    tasks_from: create_schema
+  vars:
+    schema: "{{ data_dataset }}"
+
+#http://www.ohdsi.org/web/wiki/doku.php?id=documentation:software:webapi:source_configuration
+- name: add entry to webapi.source and webapi.source_daimon
+  shell: psql ohdsi -f link_data.sql
+  become: true
+  become_user: postgres
+  args:
+    chdir: "{{data_download_dir}}/ohdsi/sql"
+    creates: add_daemons_run.log
+  register: link
+
+- name: "create link_run.txt"
+  copy:
+    content: "{{ link }}"
+    dest: "{{data_download_dir}}/ohdsi/sql/add_daemons.log"
     force: no
 

@@ -13,7 +13,7 @@
   git:
     repo: https://github.com/OHDSI/WebAPI.git
     dest: "{{ www_download_dir }}/WebAPI"
-    version: v2.6.0
+#    version: v2.6.0
 
 - name: Ensures {{www_download_dir}}/WebAPI/WebAPIConfig dir exists
   file: path={{www_download_dir}}/WebAPI/WebAPIConfig state=directory

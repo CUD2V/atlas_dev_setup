@@ -1,0 +1,4 @@
+---
+
+- include: upload.yml
+- include: load.yml

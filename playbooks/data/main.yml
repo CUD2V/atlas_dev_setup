@@ -1,9 +1,15 @@
 ---
 - hosts: data
   become: yes
+  tasks:
+  - include_role:
+      name: cdm
 
-  roles:
-    - download_data
-    - load_data
-    - achilles
+  - include_role:
+      name: vocabulary
 
+  - include_role:
+      name: '{{ data_dataset }}'
+
+  - include_role:
+      name: achilles

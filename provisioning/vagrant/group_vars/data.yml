@@ -1,6 +1,6 @@
 ---
 
 data_download_dir: /vagrant/data
-
+data_cdm_version: v5.2.2
 data_dataset: synpuf1k
 data_dataset_name: "SYNPUF 1k"

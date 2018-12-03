@@ -1,0 +1,11 @@
+---
+
+- name: create schema + assign privileges
+  block:
+    - name: create "{{ schema }}" schema
+      postgresql_schema:
+        name: "{{ schema }}"
+        database: "{{ db_name }}"
+        owner: ohdsi_admin
+  become: true
+  become_user: postgres

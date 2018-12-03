@@ -56,7 +56,14 @@
 - name: run achilles
   command: "{{ data_download_dir }}/run_achilles.R"
   args:
-    creates: "{{ data_download_dir }}/output/log_achilles.txt"
+    creates: "{{ data_download_dir }}/{{ data_dataset }}_achilles.log"
   notify:
     - restart tomcat
     - verify WebAPI
+  register: achilles
+
+- name: "create {{ data_dataset }}_achilles.log"
+  copy:
+    content: "{{ achilles }}"
+    dest: "{{ data_download_dir }}/{{ data_dataset }}_achilles.log"
+    force: no
