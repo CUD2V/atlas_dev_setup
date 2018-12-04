@@ -6,16 +6,17 @@ Mainly intended to help with setting up for development. Still very much a work 
 
 ## Dependencies
 * [ansible 2.7+](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
-* [Vagrant 2.2.0](https://www.vagrantup.com/intro/getting-started/install.html)
-* [Virtual Box 5.2.20](https://www.vagrantup.com/intro/getting-started/install.html)
+* [Vagrant 2.2.2](https://www.vagrantup.com/intro/getting-started/install.html)
+* [Virtual Box 5.2.22](https://www.vagrantup.com/intro/getting-started/install.html)
 
 ## Running
 ### Local environment
 * `vagrant up`
 * Once ansible finishes: 
     * Atlas will be running at [http://192.168.33.10:8080/atlas/](http://localhost:8080/atlas/)
-    * The source code for the various projects used in Atlas can be found on the host machine under `src`
     
+* syncing is disabled until the provisioner finishes. To sync the source folders once the provisioner finishes run `vagrant reload`. The source code for the various projects used in Atlas can be found on the host machine under `src`
+
 ### Server
 * The playbook can also be used to deploy Atlas to a remote server.  
     * copy either of the existing provisioning directories (`tests` or `vagrant`)

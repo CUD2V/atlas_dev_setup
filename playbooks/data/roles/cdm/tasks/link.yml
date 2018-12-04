@@ -1,0 +1,17 @@
+---
+
+# http://www.ohdsi.org/web/wiki/doku.php?id=documentation:software:webapi:source_configuration
+- name: add entry to webapi.source and webapi.source_daimon
+  shell: "psql ohdsi -f '{{ data_dataset }}_link_data.sql'"
+  become: true
+  become_user: postgres
+  args:
+    chdir: "{{data_download_dir}}/ohdsi/sql"
+#    creates: "{{data_download_dir}}/ohdsi/sql/{{ data_dataset }}_add_daemons.log"
+  register: link
+
+- name: "create {{ data_dataset }}_add_daemons_run.log"
+  copy:
+    content: "{{ link }}"
+    dest: "{{data_download_dir}}/ohdsi/sql/{{ data_dataset }}_add_daemons.log"
+    force: no

@@ -1,8 +1,29 @@
 VAGRANTFILE_API_VERSION = "2"
+# Function to check whether VM was already provisioned 
+# and only mount after done provisioning
+# https://stackoverflow.com/questions/24855635/check-if-vagrant-provisioning-has-been-done
+def provisioned?(vm_name='default', provider='virtualbox')
+  File.exist?(".vagrant/machines/#{vm_name}/#{provider}/action_provision")
+end
+
+sync_folder_disabled = !provisioned?
+puts "sync_folder_disabled = " + String(sync_folder_disabled)
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "bento/ubuntu-16.04"
-  config.vm.synced_folder "src/", "/vagrant", disabled: false
+  required_plugins = %w(vagrant-vbguest vagrant-disksize)
+  _retry = false
+  required_plugins.each do |plugin|
+    unless Vagrant.has_plugin? plugin
+      system "vagrant plugin install #{plugin}"
+      _retry=true
+    end
+  end
+  if (_retry)
+    exec "vagrant " + ARGV.join(' ')
+  end
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.synced_folder "src/", "/vagrant", disabled: sync_folder_disabled
+  config.disksize.size = '80GB'
 
   config.vm.provider :virtualbox do |v|
     v.memory = 2048
