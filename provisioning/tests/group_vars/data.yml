@@ -2,5 +2,3 @@
 
 data_download_dir: /atlas/data
 data_cdm_version: v5.2.2
-data_dataset: synpuf1k
-data_dataset_name: "SYNPUF 1k"
