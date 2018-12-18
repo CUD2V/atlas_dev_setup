@@ -7,7 +7,7 @@
   become_user: postgres
   args:
     chdir: "{{data_download_dir}}/ohdsi/sql"
-#    creates: "{{data_download_dir}}/ohdsi/sql/{{ data_dataset }}_add_daemons.log"
+    creates: "{{data_download_dir}}/ohdsi/sql/{{ data_dataset }}_add_daemons.log"
   register: link
 
 - name: "create {{ data_dataset }}_add_daemons_run.log"

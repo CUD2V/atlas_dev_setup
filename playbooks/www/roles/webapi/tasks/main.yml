@@ -13,7 +13,7 @@
   git:
     repo: https://github.com/OHDSI/WebAPI.git
     dest: "{{ www_download_dir }}/WebAPI"
-#   Build failes if try to pin to v2.6.0 revisit once there is a v2.7.0
+# TODO  Build fails if try to pin to v2.6.0 revisit once there is a v2.7.0
 #   https://github.com/OHDSI/WebAPI/pull/708
 #   version: v2.6.0
 

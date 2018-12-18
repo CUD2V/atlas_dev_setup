@@ -25,20 +25,3 @@
     remote_src: yes
     dest: "{{ data_download_dir }}/{{ data_dataset }}"
     creates: "{{ data_download_dir }}/{{ data_dataset }}/README.md"
-
-# synpuf5pct includes vocabulary files.
-# It's assumed this is downloaded / loaded separately
-# so remove the vocabulary related files
-#- name: remove duplicated vocab files
-#  shell: "find {{ data_download_dir }}/vocabulary/*.csv -type f -print0 | xargs -0 -n1 basename | tr '[:upper:]' '[:lower:]'"
-#  register: vocab_filename
-#
-#- name: print filename
-#  debug: msg={{ vocab_filename }}
-#
-#- name: vocab is included with this dataset, so remove duplicate files
-#  file:
-#    path: "{{ data_download_dir }}/{{ data_dataset }}/{{item}}"
-#    state: absent
-#  with_items:
-#  - "{{ vocab_filename.stdout }}"

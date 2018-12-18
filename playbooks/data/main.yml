@@ -30,17 +30,17 @@
       create_source_daimon_entry: true
       delimiter: DELIMITER E'\t' CSV ENCODING 'UTF8'
 
-  - name: load synpuf5pct
-    block:
-    - include_role:
-        name: synpuf5pct
-
-    - include_role:
-        name: achilles
-    vars:
-      data_dataset: "synpuf5pct"
-      data_dataset_name: "SYNPUF 5%"
-      source_id: 2
-      results_schema: true
-      create_source_daimon_entry: true
-      delimiter: DELIMITER E'\t' CSV ENCODING 'UTF8'
+#  - name: load synpuf5pct
+#    block:
+#    - include_role:
+#        name: synpuf5pct
+#
+#    - include_role:
+#        name: achilles
+#    vars:
+#      data_dataset: "synpuf5pct"
+#      data_dataset_name: "SYNPUF 5%"
+#      source_id: 2
+#      results_schema: true
+#      create_source_daimon_entry: true
+#      delimiter: DELIMITER E'\t' CSV ENCODING 'UTF8'
