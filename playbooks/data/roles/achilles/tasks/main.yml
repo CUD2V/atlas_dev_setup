@@ -68,9 +68,6 @@
   command: "{{ data_download_dir }}/{{ data_dataset}}_run_achilles.R"
   args:
     creates: "{{ data_download_dir }}/{{ data_dataset }}_achilles.log"
-  notify:
-    - restart tomcat
-    - verify WebAPI
   register: achilles
 
 - name: "create {{ data_dataset }}_achilles.log"

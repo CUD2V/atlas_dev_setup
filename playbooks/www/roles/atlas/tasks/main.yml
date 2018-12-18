@@ -17,8 +17,8 @@
   synchronize:
     src: "{{ www_download_dir }}/Atlas-released/"
     dest: /var/lib/tomcat8/webapps/atlas/
+    archive: no
     checksum: yes
-    times: no
   delegate_to: "{{ inventory_hostname }}"
 
 - name: copy local config
