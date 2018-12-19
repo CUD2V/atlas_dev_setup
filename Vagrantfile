@@ -13,9 +13,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.trigger.before :destroy do |trigger|
-    trigger.name = "Remove log files"
-    trigger.info = "Removing ./src files!"
-    run rm -rf ./src
+    trigger.run = {path: "remove_source.sh"}
   end
 
   config.vm.box = "ubuntu/xenial64"
