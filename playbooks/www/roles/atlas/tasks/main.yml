@@ -18,6 +18,10 @@
     src: "{{ www_download_dir }}/Atlas-released/"
     dest: /var/lib/tomcat8/webapps/atlas/
     archive: no
+    links: yes
+    perms: yes
+    recursive: yes
+    times: yes
     checksum: yes
   delegate_to: "{{ inventory_hostname }}"
 

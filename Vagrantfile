@@ -11,6 +11,13 @@ Vagrant.configure("2") do |config|
   if (_retry)
     exec "vagrant " + ARGV.join(' ')
   end
+
+  config.trigger.before :destroy do |trigger|
+    trigger.name = "Remove log files"
+    trigger.info = "Removing ./src files!"
+    run rm -rf ./src
+  end
+
   config.vm.box = "ubuntu/xenial64"
   config.vm.synced_folder "src/", "/vagrant", disabled: false
   config.disksize.size = '90GB'
