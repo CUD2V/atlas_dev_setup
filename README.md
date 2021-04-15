@@ -82,3 +82,6 @@ You will need to rebuild the WebAPI war file on the server.
 * Navigate up to the Atlas application download directory and edit the path in `src/main/webapp/META-INF/context.xml` for that applications name
 * Copy that directory to the Tomcat directory.  The file path will specify the new application name.
 * Restart the Tomcat service `sudo service Tomcat8 restart`
+
+## Updating Vocabularies
+Periodically you'll need to update the vocabularies in ATLAS.  The process is similar to the initial load where you'll download the applicable vocabularies from Athena, http://athena.ohdsi.org and follow the process to get the CPT4 codes.  Copy the CSV files to the ATLAS server.  Locate the applicable vocabulary tables in ATLAS and truncate them.  Load the CSV files to each of the vocabulary tables.  Each CSV will correspond to a table that needs to be reloaded.  When all of the tables are run, refresh the data sources by calling the refresh endpoint in the WEBAPI, e.g. http://AtlasURL/WebAPI/source/refresh.  The updated vocabulary date should be visible in the Configuration page of Atlas.
